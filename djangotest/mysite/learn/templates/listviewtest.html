@@ -1,0 +1,15 @@
+{% extends 'test/base.html' %}
+
+{% block title %} viewTest {% endblock %}
+
+{% block content %}
+<div>
+<ul>
+{% for art in artlist %}
+<li>
+<a href="{% url 'detailviewtest' art.id %}">{{art.title}}</a>
+</li>
+{% endfor %}
+</ul>
+</div>
+{% endblock %}

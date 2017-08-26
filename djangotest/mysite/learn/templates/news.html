@@ -1,0 +1,21 @@
+{% extends 'test/base.html' %}
+
+{% block title %} News {% endblock %}
+
+{% block content %}
+
+<div class='news'>
+<ul id="itemContainer">
+{% for n in news %}
+	<li>
+		<a href="{% url 'article'  n.id %}">{{n.title}}<span>{{n.addtime}}</span></a>
+	</li>
+{% endfor %}
+</ul>
+</div>
+
+<!-- 这个是jq分页插件 -->
+<!-- navigation holder -->
+<div class="holder"></div>
+
+{% endblock %}

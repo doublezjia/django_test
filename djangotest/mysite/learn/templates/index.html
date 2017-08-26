@@ -1,0 +1,21 @@
+{% extends "test/base.html" %}
+
+{% block title%}index{% endblock%}
+{% block content %}
+{% autoescape off %}
+{% for cont in contents %}
+<div class='indexBox'>
+	<div class='indexTitle'><a href="{% url 'article' cont.id %}">{{cont.title}}</a></div>
+	<div class='indexContent'>
+		<span>{{cont.content|striptags|truncatechars_html:100}}</span>
+	</div>
+	<div class='indexOther'>
+		<span>Release Time： {{cont.addtime}}</span>
+		<span class='indexMove'><a href="{% url 'article' cont.id %}">Move...</a></span>
+	</div>
+</div>
+{% endfor %}
+{% endautoescape %}
+{% endblock %}
+
+

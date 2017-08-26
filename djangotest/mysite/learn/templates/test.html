@@ -1,0 +1,26 @@
+{% extends 'test/base.html' %}
+
+{% block title %} Test {% endblock %}
+
+{% block content %}
+
+<div>
+{% for t in test1 %}
+<a href="{% url 'tag' t.id %}">{{t.title}}</a><br/>
+{% endfor %}
+
+<form action="{% url 'search' %}" method="post">
+<!-- 用post来提交必须要有 csrf_token ,输入框通过form实现 -->
+<div class='searchBox'>
+{% csrf_token %}
+{{ form }}
+<input type="submit" name="Submit" value="搜 索" class='searchButton'>
+</div>
+</form>
+{% load staticfiles %}
+<img src="{% static '../media/' %}{{test2.img}}" >
+{{test2.img}}
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends 'test/base.html' %}
+
+{% block title %} Search {% endblock %}
+
+{% block content %}
+<div >
+<h1>Search</h1>
+	<div class="search">
+		<ul id="itemContainer">
+			{% for seaname in Seanames %}
+			<li>
+				<a href="{% url 'article'  seaname.id %}">{{seaname.title}}<span>{{seaname.addtime}}</span></a>	
+			</li>
+			{% endfor %}
+		</ul>
+	</div>
+</div>
+<!-- navigation holder -->
+<div class="holder"></div>
+{% endblock %}

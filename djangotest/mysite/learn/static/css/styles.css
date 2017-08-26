@@ -1,0 +1,249 @@
+/*
+各浏览器私有属性
+-moz代表firefox浏览器私有属性
+-ms代表IE浏览器私有属性
+-webkit代表chrome、safari私有属性
+*/
+
+
+ @font-face{
+	font-family: mszh;
+	src:url('mszh.ttf');
+} 
+
+
+body{
+	margin: 0px auto;font-family: mszh,Sans-serif;
+}
+body a{
+	color: #515151;
+	text-decoration: none;
+}
+body a:hover{
+	color: #336699;
+}
+.indexBox{
+	margin-top: 10px;
+	width: 100%;
+	border:1px solid #333;
+	box-shadow: 1px 1px 3px 1px #333;
+}
+.indexBox a{
+	color: #515151;
+}
+.indexBox a:hover{
+	color: #336699;
+}
+.indexTitle{
+	margin: 0px;
+	padding: 10px;
+	border-bottom: 1px dashed #333;
+}
+.indexContent{
+	margin: 0px;
+	padding: 5px;
+	border-bottom: 1px dashed #333;
+}
+.indexOther{
+	margin: 0px;
+	padding: 5px;
+}
+.indexMove{
+	float: right;
+	position: relative;
+	right: 20px;
+}
+
+.content{
+	/*margin: 0px 100px 0px;*/
+	border-left: 1px solid #000;
+	border-right: 1px solid #000;
+	padding: 10px;
+	width: 80%;
+	height: auto;
+}
+.content a{
+	color: #515151;
+}
+.content a:hover{
+	color: #336699;
+}
+.nav{
+	border:1px solid #000000;
+	box-shadow: 1px 1px 3px 1px #333;
+}
+.bottom{
+	border: 1px solid #000000;
+	font-size: 12px;
+	text-align: center;
+}
+.bot a{
+	color:#515151; 
+}
+.bot a:hover{
+	color: #4F94CD;
+}
+
+.ban{
+	background-color: #4A708B;
+	width: 100%;
+	height: 30px;
+}
+.ban ul {
+	width: 100%;
+	height: 30px;
+	margin: 0px; 
+}
+.ban ul li {
+	float: left;
+	list-style: none;
+	height: 30px;
+}
+.ban ul li a{
+	display: block;
+	height: 100%;
+	width: 100px; 
+	background-color: #4A708B;
+	text-decoration: none;
+	color: #515151;
+	font-size: 20px;
+	border-right: 1px solid #000000;
+	padding: 0px 10px 0px ;
+	text-align: center;
+}
+.ban ul li a:hover{
+	color: #515151 ;
+	background-color: #4F94CD;
+}
+
+/*.ban ul li span{
+	margin: 0px;
+	padding: 5px;
+	position: absolute;
+	right: 100px;
+}*/
+.news ul {
+	margin: 0;padding: 0;
+}
+.news ul li{
+	list-style: none;
+	border-bottom: 1px dashed #333;
+	width: 100%;
+}
+.news ul li a{
+	text-decoration: none;
+	color:#333;
+}
+.news ul li a span{
+	float: right;
+}
+.news ul li a:hover{
+	color: #993333;
+}
+.Arttitle{
+	padding: 30px;
+	border-bottom: 1px dashed #333;
+}
+.Arttitle h1{
+	margin: 0;padding: 0;
+}
+.Artother{
+	float: right;
+	font-size: 12px;
+	margin: 5px;
+}
+.Arttag{
+	border-top: 1px dashed #333;
+	border-bottom: 1px dashed #333;
+}
+.shares{
+	float: right;
+	margin: 0px;
+	padding: 0px;
+	position: relative;
+	right: 10px;
+	bottom: 20px;
+}
+.search{
+	border-top: 1px dashed #333;padding-top: 30px;
+}
+.search ul {
+	margin: 0;padding: 0;
+}
+.search ul li{
+	list-style: none;
+	border-bottom: 1px dashed #333;
+	width: 100%;
+}
+.search ul li a{
+	text-decoration: none;
+	color:#333;
+}
+.search ul li a span{
+	float: right;
+}
+.search ul li a:hover{
+	color: #993333;
+}
+
+.searchBox {
+	border:2px solid #333;
+	margin: 0;
+	padding: 10px;
+	width: 200px;
+	background-color: #fff;
+}
+.searchButton {
+	background-color: #3385ff;
+	margin: 0px;
+	padding: 0px;
+	position: relative;
+	left: -3px;
+	border:1px solid #3385ff;
+}
+.searchText{
+	background-color: #fff;
+	margin: 0;
+	padding: 3px;
+	border:1px solid #3385ff;
+	/*box-shadow: 1px 1px 3px 1px #333;*/
+}
+
+.sidebox{
+	width: 300px;
+	height: auto;
+}
+.sidebar{
+	position:relative;
+	left: 10px;
+	width: 100%;
+	height: 150px;
+	border:1px solid #333;
+	margin: 0;
+	padding: 0;
+}
+.con{
+	width: 1500px;
+	margin: 0px 100px 0px;
+	display: inline-flex;
+}
+
+.pagePre{
+	display: block;
+	font-size: 14px;
+	padding:10px;
+	float: left;
+}
+.pageNext{
+	display: block;
+	font-size: 14px;
+	padding:10px;
+	float: right;
+}
+.pagePre a,.pageNext a{
+	color: #333;
+}
+.pagePre a:hover,.pageNext a:hover{
+	color: #336699;
+}
+

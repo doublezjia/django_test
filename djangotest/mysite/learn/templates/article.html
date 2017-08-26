@@ -1,0 +1,60 @@
+{% extends 'test/base.html' %}
+
+{% block title %} {{artcon.title}} {% endblock %}
+
+{% block content %}
+{% autoescape off %}
+<div class='Arttitle'>
+<h1>{{artcon.title}}</h1>
+<div class='Artother'>{{artcon.addtime}}</div>
+</div>
+<div>
+{{artcon.content}}
+
+<div>
+本文的地址是：<a href="{% url 'article'  artcon.id %}">http://localhost:8000{% url 'article'  artcon.id %}</a>  转载请注明.
+</div>
+
+</div>
+
+<div class='Arttag'>
+
+<p>TAG:{{artcon.tag}}</p>
+
+	<!-- 分享按钮 要改 -->
+	<div class="shares">
+		<div class="bdsharebuttonbox"><A class=bds_more href="#" data-cmd="more"></A><A class=bds_qzone title=分享到QQ空间 href="#" data-cmd="qzone"></A><A class=bds_tsina title=分享到新浪微博 href="#" data-cmd="tsina"></A><A class=bds_weixin title=分享到微信 href="#" data-cmd="weixin"></A><A class=bds_youdao title=分享到有道云笔记 href="#" data-cmd="youdao"></A><A class=bds_evernotecn title=分享到印象笔记 href="#" data-cmd="evernotecn"></A></div>
+		<script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"1","bdSize":"16"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>	
+	</div>
+	<!-- 分享按钮  -->
+	
+</div>
+
+<!-- 读取上下篇文章 -->
+<div>
+{% if pre and next %}
+<span class='pagePre'>Previous: <a href="{% url 'article'  pre.id %}">{{pre.title}}</a></span>
+<span class='pageNext'>Next: <a href="{% url 'article'  next.id %}">{{next.title}}</a></span>     
+{% else %}
+	{% if pre %}
+	<span class='pagePre'>Previous: <a href="{% url 'article'  pre.id %}">{{pre.title}}</a></span>
+	<span class='pageNext'>Next: 没有了</span>   
+	{% endif %}
+
+	{% if next %}
+	<span class='pagePre'>Previous: 没有了</span>
+	<span class='pageNext'>Next: <a href="{% url 'article'  next.id %}">{{next.title}}</a></span>     
+	{% endif %}
+{% endif %}
+</div>
+
+
+<div>
+<!-- 评论 要改 -->
+<!-- UY BEGIN -->
+<div id="uyan_frame"></div>
+<script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js"></script>
+<!-- UY END -->
+</div>
+{% endautoescape %}
+{% endblock %}

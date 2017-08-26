@@ -1,0 +1,10 @@
+{% extends 'test/base.html' %}
+
+{% block title %} TAG {% endblock %}
+
+{% block content %}
+
+{% for tag in tags %}
+{{tag.title}}{{tag.addtime}}</br>
+{% endfor %}
+{% endblock %}

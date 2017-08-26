@@ -1,0 +1,19 @@
+{% extends 'test/base.html' %}
+
+{% block title %} datailviewtest {% endblock %}
+
+{% block content %}
+{% autoescape off %}
+<a href="{% url 'index' %}">Home</a>>><a href="">test</a>>>{{article.title}}
+<article>
+
+<h1>{{article.title}} {{tag.age}}</h1>
+
+
+{{article.content}}
+
+</article>
+
+
+{% endautoescape %}
+{% endblock %}

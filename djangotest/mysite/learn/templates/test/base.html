@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>{% block title %} test {% endblock %}</title>
+	<meta name="description" content="" />
+	<meta name="keywords" content="" />
+	{% load staticfiles %}
+	<link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/jPages/jPages.css' %}">
+	<script type="text/javascript" src="{% static 'js/jPages/jquery-3.1.1.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/jPages/jPages.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/js.js' %}"></script>
+	<link rel="shortcut icon" href="{% static 'img/favicon.ico' %}">
+</head>
+<body>
+{% include 'test/nav.html' %}
+<div class="con">
+	<div class="content">
+	{% block content %}
+	test
+	{% endblock %}
+	</div>
+	{% include 'test/sidebar.html' %}
+</div>
+{% include 'test/bottom.html' %}
+</body>
+</html>
