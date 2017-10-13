@@ -19,7 +19,7 @@ def mysqlconn():
 
 def index(request):
 	nine1 = 0;eight1 = 0;nine2 = 0;eight2 = 0;other=0
-	age1=0;age2=0
+	age1=0;age2=0;agecountlist = [];agecountdict={}
 	countrylist = [];countrydict={}
 	conn = mysqlconn()
 	cursor = conn.cursor()
@@ -41,22 +41,28 @@ def index(request):
 
 		# 统计年份
 		reldate = i[3].split('/')
-		relage = reldate[0]
+		relage = reldate[0].strip()
 		if int(relage) >= 2000:
 			age1 = age1+1
 		elif int(relage) < 2000:
 			age2 = age2+1
-
+		agecountlist.append(relage)
 		# 获取数据库中的国家地区并统计，1964这个是录入数据库中的数据位置有问题
 		relcountry = reldate[1].split()
 		if relcountry[0] == '1964':
 			relcountry[0] = '中国大陆'
 		countrylist.append(relcountry[0])
+
+	for ageitem in agecountlist:
+		agenum = agecountlist.count(ageitem)
+		agecountdict[ageitem]=agenum
+
 	for country in countrylist:
 		countnum = countrylist.count(country)
 		countrydict[country]=countnum
 	# 把countrydict转为JSON
 	countryjson = json.dumps(countrydict)
+	agejson = json.dumps(agecountdict)
 	# 传递值到前端
 	return render(request,'index.html',{'nine1':nine1,'nine2':nine2,'eight1':eight1,
-		'eight2':eight2,'other':other,'age1':age1,'age2':age2,'countryjson':countryjson})
+		'eight2':eight2,'other':other,'age1':age1,'age2':age2,'countryjson':countryjson,'agejson':agejson})
