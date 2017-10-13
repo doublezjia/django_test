@@ -52,11 +52,11 @@ def index(request):
 		if relcountry[0] == '1964':
 			relcountry[0] = '中国大陆'
 		countrylist.append(relcountry[0])
-		for country in countrylist:
-			countnum = countrylist.count(country)
-			countrydict[country]=countnum
-		# 把countrydict转为JSON
-		countryjson = json.dumps(countrydict)
+	for country in countrylist:
+		countnum = countrylist.count(country)
+		countrydict[country]=countnum
+	# 把countrydict转为JSON
+	countryjson = json.dumps(countrydict)
 	# 传递值到前端
 	return render(request,'index.html',{'nine1':nine1,'nine2':nine2,'eight1':eight1,
 		'eight2':eight2,'other':other,'age1':age1,'age2':age2,'countryjson':countryjson})
