@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+    <!-- 加载静态路径 -->
+	{% load staticfiles %}
+	<meta charset="utf-8">
+    <!-- 引用Echarts -->
+	<script type="text/javascript" src="{% static 'echarts.js' %}"></script>
+    <script type="text/javascript" scr="{% static 'jquery-3.2.1.min.js' %}"></script>
+</head>
+<body>
+
+<!-- 评分统计 -->
+<div id="ratingnum" style="width: 600px;height:400px;"></div>
+<!-- 这里用Echarts生成表格 -->
+<script type="text/javascript">
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('ratingnum'));
+
+    // 指定图表的配置项和数据
+    var option = {
+    title : {
+        text: '豆瓣Top250评分统计',
+        subtext: '数据来源于豆瓣',
+        x:'center'
+    },
+    tooltip : {
+        trigger: 'item',
+        formatter: "{a} <br/>{b} : {c} ({d}%)"
+    },
+    legend: {
+        orient: 'vertical',
+        left: 'left',
+        data: ['9.5分以上','9到9.5分','8.5到9分','8到8.5分','低于8分']
+    },
+    series : [
+        {
+            name: '占总数的电影数量',
+            type: 'pie',
+            radius : '55%',
+            center: ['50%', '60%'],
+            data:[
+                {value:{{nine1}}, name:'9.5分以上'},
+                {value:{{nine2}}, name:'9到9.5分'},
+                {value:{{eight1}}, name:'8.5到9分'},
+                {value:{{eight2}}, name:'8到8.5分'},
+                {value:{{other}}, name:'低于8分'}
+            ],
+            itemStyle: {
+                emphasis: {
+                    shadowBlur: 10,
+                    shadowOffsetX: 0,
+                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                }
+            }
+        }
+    ]
+};
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+    </script>
+
+
+<!-- 年份统计 -->
+<div id="age" style="width: 600px;height:400px;"></div>
+<script type="text/javascript">
+    var age = echarts.init(document.getElementById('age'));
+    var option = {
+    title : {
+        text: '豆瓣Top250上映年份统计',
+        subtext: '数据来源于豆瓣',
+        x:'center'
+    },
+    tooltip : {
+        trigger: 'item',
+        formatter: "{a} <br/>{b} : {c} ({d}%)"
+    },
+    legend: {
+        orient: 'vertical',
+        left: 'left',
+        data: ['2000年之后上映','2000年之前上映']
+    },
+    series : [
+        {
+            name: '占总数的电影数量',
+            type: 'pie',
+            radius : '55%',
+            center: ['50%', '60%'],
+            data:[
+                {value:'{{age1}}', name:'2000年之后上映'},
+                {value:'{{age2}}', name:'2000年之前上映'}
+            ],
+            itemStyle: {
+                emphasis: {
+                    shadowBlur: 10,
+                    shadowOffsetX: 0,
+                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                }
+            }
+        }
+    ]
+};
+age.setOption(option);
+</script>
+
+<!-- 国家统计 -->
+<div id="country" style="width: 600px;height:400px;"></div>
+<script type="text/javascript">
+    var country = echarts.init(document.getElementById('country'));
+    var countrydata = {{ countryjson|safe }};
+    var content=''
+
+    var option = {
+    title : {
+        text: '豆瓣Top250国家地区比例',
+        subtext: '数据来源于豆瓣',
+        x:'center'
+    },
+    tooltip : {
+        trigger: 'item',
+        formatter: "{a} <br/>{b} : {c} ({d}%)"
+    },
+    legend: {
+        orient: 'vertical',
+        left: 'left',
+        data: []
+    },
+    series : [
+        {
+            name: '国家地区',
+            type: 'pie',
+            radius : '55%',
+            center: ['50%', '60%'],
+            data:[
+            ],
+            itemStyle: {
+                emphasis: {
+                    shadowBlur: 10,
+                    shadowOffsetX: 0,
+                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                }
+            }
+        }
+    ]
+};
+// 遍历字典内容
+for(i in countrydata){
+   cdata = '{value:'+countrydata[i]+', name:"'+i+'"}'
+   // 把获取到的值添加到JSON相应的位置
+   option['legend']['data'].push(i)
+   //通过eval把JSON字符串转为JSON对象
+   option['series'][0]['data'].push(eval('('+cdata+')'))
+}
+// 在控制台中显示
+console.log(option['legend']['data'])
+console.log(option['series'][0]['data'])
+country.setOption(option);
+</script>
+</body>
+</html>
