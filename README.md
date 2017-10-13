@@ -1,3 +1,7 @@
 # django_test
 
-django 学习如何建网站 test
+Django 学习
+
+
+###Echarts官方文档
+[Echarts](http://echarts.baidu.com/index.html)

@@ -1,31 +1,29 @@
-Django模板系统——过滤器
+## Django模板系统-过滤器
 
 过滤器，变量的显示形式的改变
 
-一、形式：小写
-
+1. 形式：小写
+```
 {{ name | lower }}
+```
 
- 
-
-二、串联：先转义文本到HTML，再转换每行到 <p> 标签
-
+2. 串联：先转义文本到HTML，再转换每行到 <p> 标签
+```
 {{ my_text|escape|linebreaks }}
+```
 
- 
-
-三、过滤器的参数
-
+3. 过滤器的参数
 显示前30个字
+```
 {{ bio | truncatewords:"30" }}
-
+```
 格式化
+```
 {{ pub_date | date:"F j, Y" }}
+```
 
- 
-
-过滤器列表
-
+### 过滤器列表
+```
 {{ 123|add:"5" }} 给value加上一个数值
 
 {{ "AB'CD"|addslashes }} 单引号加上转义号，一般用于输出到javascript中
@@ -129,3 +127,5 @@ Django模板系统——过滤器
 
 {{ "a b c d e f g h i j k"|wordwrap:"5" }} 每指定数量的字符就插入回车符
 {{ boolean|yesno:"Yes,No,Perhaps" }} 对三种值的返回字符串，对应是 非空,空,None
+
+```
