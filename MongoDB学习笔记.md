@@ -210,3 +210,393 @@ dbname.system.*
 
 ![MongoDB 数据类型](http://ovv4v0gcw.bkt.clouddn.com/mongodbtype01.png)
 
+#### MongoDB 连接
+
+MongoDB shell 来连接 MongoDB 服务器
+
+标准 URI 连接语法
+
+```
+mongodb://[username:password@]host1[:port1][,host2[:port2],...[,hostN[:portN]]][/[database][?options]]
+```
+
+- mongodb:// 这是固定的格式，必须要指定。
+
+- username:password@ 可选项，如果设置，在连接数据库服务器之后，驱动都会尝试登陆这个数据库
+
+- host1 必须的指定至少一个host, host1 是这个URI唯一要填写的。它指定了要连接服务器的地址。如果要连接复制集，请指定多个主机地址。
+
+- portX 可选的指定端口，如果不填，默认为27017
+
+- /database 如果指定username:password@，连接并验证登陆指定数据库。若不指定，默认打开 test 数据库。
+
+- ?options 是连接选项。如果不使用/database，则前面需要加上/。所有连接选项都是键值对name=value，键值对之间通过&或;（分号）隔开
+
+标准的连接格式包含了多个选项(options)，如下所示：
+
+![options](http://ovv4v0gcw.bkt.clouddn.com/mongodboption01.png)
+
+实例：
+
+连接本地数据库服务器，端口是默认的。
+```
+mongodb://localhost
+```
+使用用户名fred，密码foobar登录localhost的admin数据库。
+```
+mongodb://fred:foobar@localhost
+```
+使用用户名fred，密码foobar登录localhost的baz数据库。
+```
+mongodb://fred:foobar@localhost/baz
+```
+连接 replica pair, 服务器1为example1.com服务器2为example2。
+```
+mongodb://example1.com:27017,example2.com:27017
+```
+连接 replica set 三台服务器 (端口 27017, 27018, 和27019):
+```
+mongodb://localhost,localhost:27018,localhost:27019
+```
+连接 replica set 三台服务器, 写入操作应用在主服务器 并且分布查询到从服务器。
+```
+mongodb://host1,host2,host3/?slaveOk=true
+```
+直接连接第一个服务器，无论是replica set一部分或者主服务器或者从服务器。
+```
+mongodb://host1,host2,host3/?connect=direct;slaveOk=true
+```
+当你的连接服务器有优先级，还需要列出所有服务器，你可以使用上述连接方式。
+
+安全模式连接到localhost:
+```
+mongodb://localhost/?safe=true
+```
+以安全模式连接到replica set，并且等待至少两个复制服务器成功写入，超时时间设置为2秒。
+```
+mongodb://host1,host2,host3/?safe=true;w=2;wtimeoutMS=2000
+```
+
+
+#### MongoDB 创建数据库
+
+MongoDB 创建数据库的语法格式
+
+```
+use DATABASE_NAME
+```
+
+>如果数据库不存在，则创建数据库，否则切换到指定数据库。
+
+然后可以通过`db`和`show dbs`查看
+
+>刚创建的数据库不会显示在数据库列表中的，需要在新建的数据库中添加一些数据才可以显示。
+
+
+#### MongoDB 删除数据库
+
+MongoDB 删除数据库的语法格式
+
+```
+db.dropDatabase()
+```
+
+>删除当前数据库，默认为 test，你可以使用 db 命令查看当前数据库名。
+
+实例：
+
+![删除数据库](http://ovv4v0gcw.bkt.clouddn.com/mongodbremove01.png)
+
+
+删除集合
+
+集合删除语法格式
+
+```
+db.collection.drop()
+```
+实例：
+
+![删除集合](http://ovv4v0gcw.bkt.clouddn.com/mongodbremove02.png)
+
+>实例中是删除test集合
+
+
+### MongoDB 文档操作
+
+MongoDB文档的数据结构和JSON基本一样。所有存储在集合中的数据都是BSON格式。
+
+BSON是一种类json的一种二进制形式的存储格式,简称Binary JSON。
+
+#### MongoDB 插入文档
+
+MongoDB 使用 insert() 或 save() 方法向集合中插入文档
+
+```
+db.COLLECTION_NAME.insert(document)
+```
+>`COLLECTION_NAME`为集合名，如果没有这个集合会自动创建。
+>我们可以把数据定义为一个变量，然后再插入。
+
+实例：
+
+![插入文档](http://ovv4v0gcw.bkt.clouddn.com/mongodbinsert01.png)
+
+>实例中把数据定义到`document`中，然后再添加。
+>
+>可以通过`db.COLLECTION_NAME.find()`查看数据。
+>
+>插入文档你也可以使用`db.COLLECTION_NAME.save(document)`命令。如果不指定 `_id`字段`save()`方法类似于`insert()`方法。如果指定`_id`字段，则会更新该`_id`的数据。
+
+3.2 版本后还有以下几种语法可用于插入文档:
+
+- db.collection.insertOne():向指定集合中插入一条文档数据
+
+- db.collection.insertMany():向指定集合中插入多条文档数据
+
+#### MongoDB 更新文档
+
+update()方法用于更新已存在的文档。语法格式
+
+```
+db.collection.update(
+   <query>,
+   <update>,
+   {
+     upsert: <boolean>,
+     multi: <boolean>,
+     writeConcern: <document>
+   }
+)
+```
+
+参数说明：
+
+- query : update的查询条件，类似sql update查询内where后面的。
+
+- update : update的对象和一些更新的操作符（如$,$inc...）等，也可以理解为sql update查询内set后面的
+
+- upsert : 可选，这个参数的意思是，如果不存在update的记录，是否插入objNew,true为插入，默认是false，不插入。
+
+- multi : 可选，mongodb 默认是false,只更新找到的第一条记录，如果这个参数为true,就把按条件查出来多条记录全部更新。
+
+- writeConcern :可选，抛出异常的级别。
+
+实例：
+
+![更新数据](http://ovv4v0gcw.bkt.clouddn.com/mongodbupdate01.png)
+
+>实例中只修改匹配的第一条记录，如果要修改多条的，需要设置`mulit`参数为`true`
+
+```
+db.coltest.update({title:'Baidu'},{$set:{title:'百度'}},{mulit:true})
+```
+
+只更新第一条记录：
+```
+db.col.update( { "count" : { $gt : 1 } } , { $set : { "test2" : "OK"} } );
+```
+全部更新：
+```
+db.col.update( { "count" : { $gt : 3 } } , { $set : { "test2" : "OK"} },false,true );
+```
+只添加第一条：
+```
+db.col.update( { "count" : { $gt : 4 } } , { $set : { "test5" : "OK"} },true,false );
+```
+全部添加加进去:
+```
+db.col.update( { "count" : { $gt : 5 } } , { $set : { "test5" : "OK"} },true,true );
+```
+全部更新：
+```
+db.col.update( { "count" : { $gt : 15 } } , { $inc : { "count" : 1} },false,true );
+```
+只更新第一条记录：
+```
+db.col.update( { "count" : { $gt : 10 } } , { $inc : { "count" : 1} },false,false );
+```
+>在3.2版本开始，MongoDB提供以下更新集合文档的方法：
+>
+>db.collection.updateOne() 向指定集合更新单个文档
+>
+>db.collection.updateMany() 向指定集合更新多个文档
+
+
+save() 方法
+
+save() 方法通过传入的文档来替换已有文档。语法格式
+
+```
+db.collection.save(
+   <document>,
+   {
+     writeConcern: <document>
+   }
+)
+```
+
+参数说明：
+
+- document : 文档数据。
+
+- writeConcern :可选，抛出异常的级别。
+
+#### MongoDB 删除文档
+
+MongoDB remove()函数是用来移除集合中的数据。
+
+remove() 方法的基本语法格式
+
+```
+db.collection.remove(
+   <query>,
+   <justOne>
+)
+```
+
+2.6版本以后的，语法格式如下：
+```
+db.collection.remove(
+   <query>,
+   {
+     justOne: <boolean>,
+     writeConcern: <document>
+   }
+)
+```
+参数说明：
+- query :（可选）删除的文档的条件。
+
+- justOne : （可选）如果设为 true 或 1，则只删除一个文档。
+
+- writeConcern :（可选）抛出异常的级别。
+
+>执行remove()函数前先执行find()命令来判断执行的条件是否正确，这是一个比较好的习惯。
+
+删除title为Google的记录
+
+```
+db.coltest.remove({title:'Google'})
+```
+
+如果你只想删除第一条找到的记录可以设置 justOne 为 1
+```
+db.coltest.remove({'title':'Google'},1)
+```
+
+如果你想删除所有数据，可以使用以下方式（类似常规 SQL 的 truncate 命令）
+
+```
+db.col.remove({})
+```
+
+#### MongoDB 查询文档
+
+MongoDB 查询文档使用 find() 方法。
+
+find() 方法以非结构化的方式来显示所有文档。
+
+MongoDB 查询数据的语法格式如下
+```
+db.collection.find(query, projection)
+```
+参数说明：
+
+- query ：可选，使用查询操作符指定查询条件
+
+- projection ：可选，使用投影操作符指定返回的键。查询时返回文档中所有键值， 只需省略该参数即可（默认省略）。
+
+如果你需要以易读的方式来读取数据，可以使用`pretty()`方法
+```
+db.collection.find().pretty()
+```
+
+>pretty() 方法以格式化的方式来显示所有文档。
+>
+>除了 find() 方法之外，还有一个 findOne() 方法，它只返回一个文档。
+
+MongoDB 与 RDBMS Where 语句比较
+
+![查询比较](http://ovv4v0gcw.bkt.clouddn.com/mongodbsel01.png)
+
+MongoDB AND条件
+
+MongoDB的`find()`方法可以传入多个键(key)，每个键(key)以逗号隔开，及常规SQL的AND条件。
+
+语法格式如下：
+```
+db.col.find({key1:value1, key2:value2}).pretty()
+```
+实例
+
+![and查询](http://ovv4v0gcw.bkt.clouddn.com/mongodbsel02.png)
+
+>实例中类似sql中的where语句： where URL='www.baidu.com' and title = 'Baidu'
+
+MongoDB OR条件
+
+MongoDB OR条件语句使用了关键字`$or`,语法格式
+```
+db.col.find(
+   {
+      $or: [
+         {key1: value1}, {key2:value2}
+      ]
+   }
+).pretty()
+```
+
+实例
+
+![or查询](http://ovv4v0gcw.bkt.clouddn.com/mongodbsel03.png)
+
+#### MongoDB 条件操作符
+
+条件操作符用于比较两个表达式并从mongoDB集合中获取数据。
+
+MongoDB中条件操作符有：
+
+- (>) 大于 - $gt
+- (<) 小于 - $lt
+- (>=) 大于等于 - $gte
+- (<= ) 小于等于 - $lte
+
+例子
+
+使用$gte查询
+```
+db.col.find({likes : {$gte : 100}})
+```
+类似于SQL中的
+```
+Select * from col where likes >=100;
+```
+
+使用$lt和$gt查询
+
+```
+db.col.find({likes : {$lt :200, $gt : 100}})
+```
+类似于SQL中的
+```
+Select * from col where likes>100 AND  likes<200;
+```
+>其他的条件操作符同理
+
+#### MongoDB $type 操作符
+
+`$type`操作符是基于BSON类型来检索集合中匹配的数据类型，并返回结果。
+
+MongoDB 中可以使用的类型如下表所示
+
+![MongoDB 中可以使用的类型](http://ovv4v0gcw.bkt.clouddn.com/mongodbtype02.png)
+
+MongoDB 操作符`-$type`用法
+
+获取`coltest`集合中`title`为`String`的数据
+
+```
+db.coltest.find({title:{$type:2}})
+```
+
