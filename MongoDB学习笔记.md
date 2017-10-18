@@ -210,6 +210,8 @@ dbname.system.*
 
 ![MongoDB 数据类型](http://ovv4v0gcw.bkt.clouddn.com/mongodbtype01.png)
 
+### Mongo 数据库操作
+
 #### MongoDB 连接
 
 MongoDB shell 来连接 MongoDB 服务器
@@ -599,4 +601,197 @@ MongoDB 操作符`-$type`用法
 ```
 db.coltest.find({title:{$type:2}})
 ```
+
+#### MongoDB Limit与Skip方法
+
+##### MongoDB Limit()方法
+
+如果你需要在MongoDB中读取指定数量的数据记录，可以使用MongoDB的Limit方法，limit()方法接受一个数字参数，该参数指定从MongoDB中读取的记录条数。
+
+limit()方法基本语法如下
+```
+db.COLLECTION_NAME.find().limit(NUMBER)
+```
+
+>如果`limit()`中的括号为空则显示全部数据，如果为1则显示第一条记录，为10则显示前十条记录，如此类推。
+
+##### MongoDB Skip()方法
+
+使用skip()方法来跳过指定数量的数据，skip方法同样接受一个数字参数作为跳过的记录条数。
+
+skip() 方法脚本语法格式如下
+
+```
+db.COLLECTION_NAME.find().limit(NUMBER).skip(NUMBER)
+```
+
+>如果`skip()`中的括号为空则显示全部，如果为1则跳过第一条记录，为10则跳过前十条记录，如此类推。`skip()`方法默认参数为0
+
+>可以通过`limit()`和`skip()`实现分页，不过`skip()`只适合小的数据分页，当有几百万条数据时效率会很低。
+
+>当查询时同时使用`sort`,`skip`,`limit`，无论位置先后，最先执行顺序`sort`再`skip`再`limit`。
+
+#### MongoDB 排序
+
+在MongoDB中使用使用`sort()`方法对数据进行排序，`sort()`方法可以通过参数指定排序的字段，并使用`1`和`-1`来指定排序的方式，其中`1`为升序排列，而`-1`是用于降序排列。
+
+sort()方法基本语法如下
+```
+db.COLLECTION_NAME.find().sort({KEY:1})
+```
+如按ID降序排序
+```
+db.coltest.find().sort({_id:-1})
+```
+#### MongoDB 索引
+
+索引通常能够极大的提高查询的效率，如果没有索引，MongoDB在读取数据时必须扫描集合中的每个文件并选取那些符合查询条件的记录。
+
+索引是特殊的数据结构，索引存储在一个易于遍历读取的数据集合中，索引是对数据库表中一列或多列的值进行排序的一种结构
+
+MongoDB使用`ensureIndex()`方法来创建索引
+
+ensureIndex()方法基本语法格式如下
+```
+db.COLLECTION_NAME.ensureIndex({KEY:1})
+```
+
+>语法中 Key 值为你要创建的索引字段，1为指定按升序创建索引，如果你想按降序来创建索引指定为-1即可。
+
+`ensureIndex()`方法中你也可以设置使用多个字段创建索引（关系型数据库中称作复合索引）
+
+`ensureIndex()`接收可选参数，可选参数列表如下
+
+![ensureIndex参数](http://ovv4v0gcw.bkt.clouddn.com/mongodbindex01.png)
+
+如创建唯一索引，就在后面加上`unique`,值为`true`
+```
+db.coltest.ensureIndex({"title":1},{"unique":true})
+```
+
+查看索引
+
+```
+db.COLLECTION_NAME.getIndexes()
+```
+
+删除索引
+
+```
+db.COLLECTION_NAME.dropIndex({KEY:1})
+```
+
+#### MongoDB 聚合
+
+MongoDB中聚合(aggregate)主要用于处理数据(诸如统计平均值,求和等)，并返回计算后的数据结果。有点类似sql语句中的`count(*)`。
+
+MongoDB中聚合的方法使用`aggregate()`。
+
+aggregate() 方法的基本语法格式如下
+
+```
+db.COLLECTION_NAME.aggregate(pipeline, options)
+```
+
+例如计算集合中相同URL的总数
+
+```
+db.coltest.aggregate([{$group:{_id:'$URL',num_tutorial:{$sum:1}}}])
+```
+![相同URL的总数](http://ovv4v0gcw.bkt.clouddn.com/mongodbaggreagte01.png)
+
+>类似如SQL中的`select URL,count(*) from coltest group by URL`
+
+一些聚合的表达式
+
+![一些聚合的表达式](http://ovv4v0gcw.bkt.clouddn.com/mongodbaggreagte02.png)
+
+>计算集合总数可以这样写`db.coltest.aggregate([{$group:{_id:null,count:{$sum:1}}}])`
+
+上面聚合中的`$group`为管道操作符，MongoDB的聚合管道将MongoDB文档在一个管道处理完毕后将结果传递给下一个管道处理。管道操作是可以重复的。
+
+聚合框架中常用的几个操作：
+
+- $project：修改输入文档的结构。可以用来重命名、增加或删除域，也可以用于创建计算结果以及嵌套文档。
+
+- $match：用于过滤数据，只输出符合条件的文档。$match使用MongoDB的标准查询操作。
+
+- $limit：用来限制MongoDB聚合管道返回的文档数。
+
+- $skip：在聚合管道中跳过指定数量的文档，并返回余下的文档。
+
+- $unwind：将文档中的某一个数组类型字段拆分成多条，每条包含数组中的一个值。
+
+- $group：将集合中的文档分组，可用于统计结果。
+
+- $sort：将输入文档排序后输出。
+
+- $geoNear：输出接近某一地理位置的有序文档。
+
+
+## MongoDB 备份
+
+### MongoDB 复制(副本集)
+
+MongoDB复制是将数据同步在多个服务器的过程。复制提供了数据的冗余备份，并在多个服务器上存储数据副本，提高了数据的可用性， 并可以保证数据的安全性。复制还允许您从硬件故障和服务中断中恢复数据。
+
+#### MongoDB复制原理
+
+mongodb的复制至少需要两个节点。其中一个是主节点，负责处理客户端请求，其余的都是从节点，负责复制主节点上的数据。
+
+mongodb各个节点常见的搭配方式为：一主一从、一主多从。
+
+主节点记录在其上的所有操作oplog，从节点定期轮询主节点获取这些操作，然后对自己的数据副本执行这些操作，从而保证从节点的数据与主节点一致。
+
+MongoDB复制结构图如下所示：
+
+![MongoDB复制结构图](http://ovv4v0gcw.bkt.clouddn.com/mongodbcopy01.png)
+
+>结构图中，客户端从主节点读取数据，在客户端写入数据到主节点时， 主节点与从节点进行数据交互保障数据的一致性。
+
+副本集特征：
+
+- N 个节点的集群
+
+- 任何节点可作为主节点
+
+- 所有写入操作都在主节点上
+
+- 自动故障转移
+
+- 自动恢复
+
+MongoDB副本集设置
+
+```
+mongod --port "PORT" --dbpath "YOUR_DB_DATA_PATH" --replSet "REPLICA_SET_INSTANCE_NAME"
+```
+
+同一个MongoDB做主从
+```
+mongod --port 27017 --dbpath /var/data/db --replSet rs0
+```
+
+以上实例会启动一个名为`rs0`的MongoDB实例，其端口号为`27017`。
+
+启动后打开命令提示框并连接上mongoDB服务。
+
+在Mongo shell 使用命令`rs.initiate()`来启动一个新的副本集。
+
+我们可以使用`rs.conf()`来查看副本集的配置
+
+查看副本集状态使用`rs.status()`命令
+
+副本集添加成员
+
+添加副本集的成员，我们需要使用多台服务器来启动mongo服务。进入Mongo客户端，使用rs.add()方法来添加副本集的成员。
+
+```
+rs.add(HOST_NAME:PORT)
+```
+
+MongoDB中你只能通过主节点将Mongo服务添加到副本集中， 判断当前运行的Mongo服务是否为主节点可以使用命令`db.isMaster()`。
+
+MongoDB的副本集与我们常见的主从有所不同，主从在主机宕机后所有服务将停止，而副本集在主机宕机后，副本会接管主节点成为主节点，不会出现宕机的情况。
+
 
