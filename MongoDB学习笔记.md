@@ -794,4 +794,116 @@ MongoDB中你只能通过主节点将Mongo服务添加到副本集中， 判断�
 
 MongoDB的副本集与我们常见的主从有所不同，主从在主机宕机后所有服务将停止，而副本集在主机宕机后，副本会接管主节点成为主节点，不会出现宕机的情况。
 
+>MongoDB副本集配置参考：[http://www.cnblogs.com/visionwang/p/3290435.html](http://www.cnblogs.com/visionwang/p/3290435.html)
+
+### MongoDB 分片
+
+####分片
+
+在Mongodb里面存在另一种集群，就是分片技术,可以满足MongoDB数据量大量增长的需求。当MongoDB存储海量的数据时，一台机器可能不足以存储数据，也可能不足以提供可接受的读写吞吐量。这时，我们就可以通过在多台机器上分割数据，使得数据库系统能存储和处理更多的数据。
+
+#### 为什么使用分片
+
+- 复制所有的写入操作到主节点
+- 延迟的敏感数据会在主节点查询
+- 单个副本集限制在12个节点
+- 当请求量巨大时会出现内存不足。
+- 本地磁盘不足
+- 垂直扩展价格昂贵
+
+分片集群结构分布
+
+![分片集群结构分布](http://ovv4v0gcw.bkt.clouddn.com/mongodbfp01.png)
+
+上图中主要有如下所述三个主要组件：
+
+- Shard:
+用于存储实际的数据块，实际生产环境中一个shard server角色可由几台机器组个一个replica set承担，防止主机单点故障
+
+- Config Server:
+mongod实例，存储了整个 ClusterMetadata，其中包括 chunk信息。
+
+- Query Routers:
+前端路由，客户端由此接入，且让整个集群看上去像单一数据库，前端应用可以透明使用。
+
+### MongoDB 备份(mongodump)与恢复(mongorestore)
+
+#### MongoDB数据备份
+
+在Mongodb中我们使用`mongodump`命令来备份MongoDB数据。该命令可以导出所有数据到指定目录中。
+
+`mongodump`命令可以通过参数指定导出的数据量级转存的服务器。
+
+mongodump命令脚本语法
+
+```
+mongodump -h dbhost -d dbname -o dbdirectory
+```
+
+参数说明：
+
+- -h：
+MongDB所在服务器地址，例如：127.0.0.1，当然也可以指定端口号：127.0.0.1:27017
+
+- -d：
+需要备份的数据库实例，例如：test
+
+- -o：
+备份的数据存放位置，例如：c:\data\dump，当然该目录需要提前建立，在备份完成后，系统自动在dump目录下建立一个test目录，这个目录里面存放该数据库实例的备份数据。
+
+mongodump 命令可选参数列表
+
+![mongodump 命令可选参数列表](http://ovv4v0gcw.bkt.clouddn.com/mongodbdump01.png)
+
+
+#### MongoDB数据恢复
+
+mongodb使用 mongorestore 命令来恢复备份的数据。
+
+mongorestore命令语法
+
+```
+mongorestore -h <hostname><:port> -d dbname <path>
+```
+
+参数说明：
+
+- --host <:port>, -h <:port>：
+MongoDB所在服务器地址，默认为： localhost:27017
+
+- --db , -d ：
+需要恢复的数据库实例，例如：test，当然这个名称也可以和备份时候的不一样，比如test2
+
+- --drop：
+恢复的时候，先删除当前数据，然后恢复备份的数据。就是说，恢复后，备份后添加修改的数据都会被删除，慎用哦！
+
+- <path>：
+mongorestore 最后的一个参数，设置备份数据所在位置，例如：c:\data\dump\test。
+你不能同时指定 <path> 和 --dir 选项，--dir也可以设置备份目录。
+
+- --dir：
+指定备份的目录
+你不能同时指定 <path> 和 --dir 选项。
+
+### MongoDB 监控
+
+在你已经安装部署并允许MongoDB服务后，你必须要了解MongoDB的运行情况，并查看MongoDB的性能。这样在大流量得情况下可以很好的应对并保证MongoDB正常运作。
+
+MongoDB中提供了mongostat 和 mongotop 两个命令来监控MongoDB的运行情况。
+
+#### mongostat 命令
+
+mongostat是mongodb自带的状态检测工具，在命令行下使用。它会间隔固定时间获取mongodb的当前运行状态，并输出。如果你发现数据库突然变慢或者有其他问题的话，你第一手的操作就考虑采用mongostat来查看mongo的状态。
+
+mongostat运行界面如下
+
+![mongostat运行界面](http://ovv4v0gcw.bkt.clouddn.com/mongodbmongostat01.png)
+
+#### mongotop 命令
+
+mongotop也是mongodb下的一个内置工具，mongotop提供了一个方法，用来跟踪一个MongoDB的实例，查看哪些大量的时间花费在读取和写入数据。 mongotop提供每个集合的水平的统计数据。默认情况下，mongotop返回值的每一秒。
+
+mongotop运行界面如下
+
+![mongotop运行界面](http://ovv4v0gcw.bkt.clouddn.com/mongodbmongotop01.png)
 
