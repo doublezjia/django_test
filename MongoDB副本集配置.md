@@ -41,7 +41,7 @@ mongo localhost:27017
 声名`config`变量
 
 ```
-config = {_id: "application", members: []}
+config = {_id: "test", members: []}
 ```
 
 注意_id和副本集启动的共享名称一致。下面来逐步添加节点的数据信息
