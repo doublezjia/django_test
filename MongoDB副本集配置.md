@@ -111,3 +111,16 @@ test:PRIMARY> rs.isMaster()
 >以上配置中都在MongoDB shell中运行。
 
 
+
+### 配置副本集的其他配置参数
+
+节点和初始化高级参数
+
+- standard 常规节点:参与投票有可能成为活跃节点
+- passive 副本节点:参与投票,但是不能成为活跃节点
+- arbiter 仲裁节点:只是参与投票不复制节点也不能成为活跃节点
+
+高级参数
+
+- Priority 0到1000之间 ,0代表是副本节点 ,1到1000是常规节点
+- arbiterOnly : true 仲裁节点
