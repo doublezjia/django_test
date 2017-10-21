@@ -907,3 +907,28 @@ mongotop运行界面如下
 
 ![mongotop运行界面](http://ovv4v0gcw.bkt.clouddn.com/mongodbmongotop01.png)
 
+
+
+
+
+### 关于mongodb几个启动参数
+
+```
+--replSet 集群名
+
+--dbpath 数据文件存储目录
+
+-port 端口
+
+--oplogSize 操作日志，这里设置了50M，对于实验环境足够了，生产环境一般默认就好，5%的磁盘空间，当然越大越好
+
+--logpath 日志文件
+
+--logappend 追加日志方式
+
+--fork 后台运行
+
+--smallfiles 使用小文件
+
+--nojournal 不记录操作日志
+```
