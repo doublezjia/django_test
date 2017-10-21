@@ -155,6 +155,7 @@ sh.shardCollection('testdb.col',{'_id':1})
 
 
 >参考文档：
+>
 >[http://blog.csdn.net/mlz_2/article/details/71703153](http://blog.csdn.net/mlz_2/article/details/71703153)
 >
 >[http://blog.csdn.net/canot/article/details/50739359](http://blog.csdn.net/canot/article/details/50739359)
