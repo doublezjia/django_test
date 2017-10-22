@@ -73,7 +73,7 @@ sh.shardCollection('test.db',{"_id":1})
 #先在数据库存放目录下新建两个目录还有一个存放日志的log目录。
 mkdir -p /var/data/shard1
 mkdir -p /var/data/shard2
-mkdir -p /va	r/data/log
+mkdir -p /var/data/log
 
 #启动Shard Server
 mongod --port 27017 --shardsvr --dbpath /var/data/shard1 --logpath /var/data/log/shard1.log --fork
@@ -118,7 +118,7 @@ rs.initiate(conf)
 
 ```
 #新建一个目录存放日志文件
-mkdir -p /va	r/data/log
+mkdir -p /var/data/log
 
 mongos --port 27200 --configdb conf/192.168.106.142:27100,192.168.106.132:27100 --logpath /var/data/log/mongos.log --fork
 ```
