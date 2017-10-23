@@ -149,6 +149,8 @@ sh.shardCollection('testdb.col',{'_id':1})
 
 这样就配置完成了。
 
+>默认的`chunksize`大小是64M
+
 `sh.status()`状态
 
 ![sh.status()状态](http://ovv4v0gcw.bkt.clouddn.com/mongodbshards01.png)
