@@ -103,7 +103,20 @@ mongo --port 27100
 
 use admin
 
-conf = {_id:'conf',configsvr:true,members:[{_id:0,host:'192.168.106.142',_id:1,host:'192.168.106.132'}]}
+conf={
+	"_id" : "conf",
+	"configsvr" : true,
+	"members" : [
+		{
+			"_id" : 0,
+			"host" : "192.168.106.142:27100"
+		},
+		{
+			"_id" : 1,
+			"host" : "192.168.106.132:27100"
+		}
+	]
+}
 
 rs.initiate(conf)
 ```
